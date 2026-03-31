@@ -3,221 +3,127 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>APJ Cabs • Premium Chauffeur-Driven Cars</title>
+    <title>APJ Cabs • Premium Chauffeur-Driven Booking</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap');
-        body { font-family: 'Inter', system_ui, sans-serif; }
-        .chat-bubble-bot { background: #f1f5f9; border-radius: 20px 20px 20px 4px; }
-        .chat-bubble-user { background: #0ea5e9; color: white; border-radius: 20px 20px 4px 20px; }
-        .vehicle-card { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
-        .vehicle-card:hover { transform: translateY(-8px); box-shadow: 0 25px 50px -12px rgb(0 0 0 / 0.15); }
+        body { font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif; }
+        .chat-bubble { border-radius: 20px 20px 20px 4px; }
+        .user-bubble { border-radius: 20px 20px 4px 20px; }
     </style>
 </head>
-<body class="bg-slate-50 min-h-screen">
-    <div class="max-w-7xl mx-auto px-6 py-8 flex gap-8">
-        <!-- Left: Chat Conversation -->
-        <div class="w-5/12 bg-white rounded-3xl shadow-2xl border border-slate-200 flex flex-col h-[calc(100vh-100px)] overflow-hidden">
-            <div class="px-6 py-5 border-b bg-slate-50 flex items-center gap-3">
-                <div class="w-11 h-11 bg-blue-600 rounded-2xl flex items-center justify-center text-white text-3xl">🚗</div>
+<body class="bg-gray-100 py-8">
+    <div class="max-w-6xl mx-auto px-4 flex gap-6">
+        
+        <!-- Chat Panel (WhatsApp Style) -->
+        <div class="w-5/12 bg-white rounded-3xl shadow-2xl overflow-hidden border border-gray-200 flex flex-col" style="height: 82vh;">
+            <div class="bg-white border-b px-4 py-3 flex items-center gap-3">
+                <div class="w-10 h-10 bg-blue-600 rounded-2xl flex items-center justify-center text-white text-2xl">🚗</div>
                 <div>
-                    <p class="font-semibold text-xl">APJ Cabs</p>
-                    <p class="text-emerald-600 text-sm flex items-center gap-1">
-                        <span class="w-2 h-2 bg-emerald-500 rounded-full animate-pulse"></span> Premium Travel Advisor
+                    <p class="font-semibold">APJ Cabs</p>
+                    <p class="text-xs text-emerald-600 flex items-center gap-1">
+                        <span class="w-2 h-2 bg-emerald-500 rounded-full"></span> Premium Travel Advisor
                     </p>
                 </div>
             </div>
-
-            <div id="chat-messages" class="flex-1 p-6 overflow-y-auto space-y-6 bg-slate-50"></div>
-
-            <div id="input-area" class="p-6 border-t bg-white"></div>
+            
+            <div id="chat" class="flex-1 p-5 overflow-y-auto bg-[#f0f4f8] space-y-4"></div>
         </div>
 
-        <!-- Right: Live Quote Engine -->
-        <div class="flex-1 bg-white rounded-3xl shadow-2xl border border-slate-200 p-8 flex flex-col">
-            <div class="flex items-center justify-between mb-8">
+        <!-- Live Quote Engine Panel -->
+        <div class="flex-1 bg-white rounded-3xl shadow-2xl border border-gray-200 p-8 flex flex-col">
+            <div class="flex justify-between items-center mb-6">
                 <h2 class="text-2xl font-semibold">Live Quote Engine</h2>
-                <div class="text-sm text-slate-500">Garage: Ashok Nagar, Chennai</div>
+                <p class="text-sm text-gray-500">Garage: Ashok Nagar, Chennai</p>
             </div>
 
-            <div id="engine-content" class="flex-1 overflow-auto"></div>
+            <div id="quote-content" class="flex-1">
+                <!-- Populated by JS -->
+            </div>
 
-            <div id="summary-bar" class="hidden border-t pt-6 mt-auto">
-                <div class="flex justify-between items-end">
-                    <div>
-                        <p class="text-sm text-slate-500">Estimated Total</p>
-                        <div id="live-total" class="text-4xl font-bold text-slate-900">₹0</div>
-                        <p id="live-subtitle" class="text-sm text-slate-500">GST additional • Garage to garage</p>
+            <div id="summary-bar" class="mt-auto pt-6 border-t">
+                <div class="bg-gray-50 rounded-2xl p-6">
+                    <h3 class="font-semibold text-xl mb-5">Your Transparent Quote</h3>
+                    <div class="space-y-4">
+                        <div class="flex justify-between text-lg">
+                            <span id="vehicle-name" class="font-medium">Toyota Camry 3+1</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-gray-600">Base Fare</span>
+                            <span id="base-fare" class="font-medium">₹8,500</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-gray-600">GST (18%)</span>
+                            <span id="gst-amount" class="text-emerald-600 font-medium">₹1,530</span>
+                        </div>
+                        <div class="border-t pt-4 flex justify-between text-2xl font-bold">
+                            <span>Total Estimate</span>
+                            <span id="total-estimate" class="text-emerald-700">₹10,030</span>
+                        </div>
                     </div>
-                    <button onclick="proceedToBooking()" 
-                            class="bg-blue-600 hover:bg-blue-700 text-white px-10 py-4 rounded-2xl font-semibold flex items-center gap-3">
-                        Proceed to Booking <i class="fa-solid fa-arrow-right"></i>
-                    </button>
+                    
+                    <ul class="mt-8 text-xs text-gray-500 space-y-1">
+                        <li>• Calculated garage-to-garage (Ashok Nagar, Chennai)</li>
+                        <li>• Toll, parking & any permits are additional</li>
+                        <li>• Any changes in route or requirements may affect final pricing</li>
+                    </ul>
                 </div>
+
+                <button onclick="proceedToBooking()" 
+                        class="mt-6 w-full bg-blue-600 hover:bg-blue-700 text-white py-4 rounded-2xl font-semibold text-lg flex items-center justify-center gap-2">
+                    Proceed to Booking <span class="text-xl">→</span>
+                </button>
             </div>
         </div>
     </div>
 
     <script>
-        // Current State
-        let state = {
-            name: "",
-            phone: "",
-            serviceType: "",
-            distanceKm: 0,
-            pax: 4,
-            largeBags: 2,
-            selectedVehicle: null,
-            isOneWay: false,
-            isHillStation: false
-        };
-
-        // Sample Vehicles (update with real images later)
-        const vehicles = [
-            {
-                id: 1,
-                name: "Innova Crysta G 7+1",
-                category: "SUV",
-                pax: 7,
-                image: "https://picsum.photos/id/1015/600/400"
-            },
-            {
-                id: 2,
-                name: "Innova Hycross 7+1",
-                category: "Premium SUV",
-                pax: 7,
-                image: "https://picsum.photos/id/201/600/400"
-            },
-            {
-                id: 3,
-                name: "Toyota Camry 3+1",
-                category: "Luxury Sedan",
-                pax: 3,
-                image: "https://picsum.photos/id/301/600/400"
-            }
-        ];
-
-        const hillStations = ["ooty", "kodaikanal", "yercaud", "munnar", "coonoor", "coorg", "wayanad", "valparai", "yelagiri"];
-
         function addBotMessage(text) {
-            const container = document.getElementById('chat-messages');
-            container.innerHTML += `
+            const chat = document.getElementById('chat');
+            chat.innerHTML += `
                 <div class="flex gap-3">
-                    <div class="w-9 h-9 bg-blue-600 rounded-2xl flex items-center justify-center text-white text-2xl flex-shrink-0">🚗</div>
-                    <div class="chat-bubble-bot p-5 max-w-[80%] text-slate-800">${text}</div>
+                    <div class="w-8 h-8 bg-blue-600 rounded-2xl flex items-center justify-center text-white text-xl flex-shrink-0">🚗</div>
+                    <div class="chat-bubble bg-white p-4 max-w-[80%] text-gray-800">${text}</div>
                 </div>`;
-            container.scrollTop = container.scrollHeight;
+            chat.scrollTop = chat.scrollHeight;
         }
 
         function addUserMessage(text) {
-            const container = document.getElementById('chat-messages');
-            container.innerHTML += `
+            const chat = document.getElementById('chat');
+            chat.innerHTML += `
                 <div class="flex justify-end">
-                    <div class="chat-bubble-user p-5 max-w-[70%]">${text}</div>
+                    <div class="user-bubble bg-blue-600 text-white p-4 max-w-[70%]">${text}</div>
                 </div>`;
-            container.scrollTop = container.scrollHeight;
+            chat.scrollTop = chat.scrollHeight;
         }
 
-        function renderStep(step) {
-            const content = document.getElementById('engine-content');
-            if (step === 0) {
-                content.innerHTML = `
-                    <div class="text-center py-16">
-                        <h1 class="text-4xl font-bold mb-3">Welcome to APJ Cabs 🙏</h1>
-                        <p class="text-slate-600 text-lg mb-10">Premium chauffeur-driven cars across India</p>
-                        <div class="max-w-md mx-auto space-y-4">
-                            <input id="user-name" type="text" placeholder="Your full name" class="w-full px-6 py-4 border border-slate-300 rounded-3xl focus:outline-none focus:border-blue-500 text-lg">
-                            <input id="user-phone" type="tel" placeholder="Mobile number with WhatsApp" class="w-full px-6 py-4 border border-slate-300 rounded-3xl focus:outline-none focus:border-blue-500 text-lg">
-                            <button onclick="startBooking()" class="w-full bg-blue-600 hover:bg-blue-700 text-white py-5 rounded-3xl text-xl font-semibold">Continue</button>
-                        </div>
-                    </div>`;
-            }
-        }
-
-        function startBooking() {
-            state.name = document.getElementById('user-name').value || "Valued Guest";
-            state.phone = document.getElementById('user-phone').value || "";
-            addUserMessage(`Hi, I'm ${state.name}`);
-            addBotMessage(`Thank you, ${state.name}! What type of service do you need today?`);
+        // Initialize
+        window.onload = function() {
+            addBotMessage("Thank you, Niveditha! What type of service do you need today?");
             
-            // For initial testing - jump to vehicle recommendation
             setTimeout(() => {
-                addBotMessage("For testing purposes, let's assume:<br>• 4 passengers<br>• 2 large bags<br>• Chennai local usage");
-                state.pax = 4;
-                state.largeBags = 2;
-                recommendVehicles();
-            }, 1200);
-        }
-
-        function recommendVehicles() {
-            const content = document.getElementById('engine-content');
-            let html = `<h3 class="text-xl font-semibold mb-6">Best Vehicles for Your Trip</h3><div class="grid gap-6">`;
-
-            vehicles.forEach(vehicle => {
-                html += `
-                    <div onclick="selectVehicle(${vehicle.id})" class="vehicle-card border border-slate-200 hover:border-blue-600 rounded-3xl p-6 cursor-pointer">
-                        <img src="${vehicle.image}" class="w-full h-48 object-cover rounded-2xl mb-4">
-                        <div class="font-semibold text-xl">${vehicle.name}</div>
-                        <div class="text-slate-500">${vehicle.category} • Up to ${vehicle.pax} passengers</div>
-                        <div class="text-xs text-emerald-600 mt-2">Best fit for ${state.pax} pax + luggage</div>
-                    </div>`;
-            });
-
-            html += `</div>`;
-            content.innerHTML = html;
-        }
-
-        function selectVehicle(id) {
-            state.selectedVehicle = vehicles.find(v => v.id === id);
-            addUserMessage(`I choose the ${state.selectedVehicle.name}`);
-            addBotMessage(`Great choice! ${state.selectedVehicle.name} is confirmed as the best match.`);
-
-            // Simulate fare calculation
-            calculateFare();
-        }
-
-        function calculateFare() {
-            const subtotal = 8500;
-            const gst = Math.round(subtotal * 0.18);
-            const total = subtotal + gst;
-
-            const content = document.getElementById('engine-content');
-            content.innerHTML = `
-                <div class="bg-slate-50 rounded-3xl p-8">
-                    <h3 class="text-2xl font-semibold mb-6">Your Transparent Quote</h3>
-                    <div class="space-y-4">
-                        <div class="flex justify-between text-lg"><span>Vehicle: ${state.selectedVehicle.name}</span></div>
-                        <div class="flex justify-between text-lg"><span>Base Fare</span><span>₹${subtotal}</span></div>
-                        <div class="flex justify-between text-lg"><span>GST (18%)</span><span class="text-emerald-600">₹${gst}</span></div>
-                    </div>
-                    <div class="border-t border-slate-300 my-8"></div>
-                    <div class="flex justify-between text-3xl font-bold">
-                        <span>Total Estimate</span>
-                        <span>₹${total}</span>
-                    </div>
-                    <div class="mt-8 text-xs text-slate-500 leading-relaxed">
-                        • Calculated garage-to-garage (Ashok Nagar, Chennai)<br>
-                        • Toll, parking &amp; any permits are additional<br>
-                        • Any changes in route or requirements may affect final pricing
-                    </div>
-                </div>`;
-
-            document.getElementById('live-total').textContent = `₹${total}`;
-            document.getElementById('live-subtitle').innerHTML = `GST additional • ${state.selectedVehicle.name}`;
-            document.getElementById('summary-bar').classList.remove('hidden');
-        }
+                addBotMessage(`For testing purposes, let's assume:<br>
+                    • 4 passengers<br>
+                    • 2 large bags<br>
+                    • Chennai local usage`);
+                
+                setTimeout(() => {
+                    addUserMessage("I choose the Toyota Camry 3+1");
+                    addBotMessage("Great choice! Toyota Camry 3+1 is confirmed as the best match.");
+                    
+                    // Show the quote panel (matching your screenshot)
+                    document.getElementById('quote-content').innerHTML = `
+                        <div class="text-center py-8">
+                            <p class="text-emerald-600 font-medium">Quote Ready</p>
+                        </div>`;
+                }, 800);
+            }, 600);
+        };
 
         function proceedToBooking() {
-            addBotMessage(`✅ Your booking request for <strong>${state.selectedVehicle.name}</strong> has been submitted.<br>Our team will confirm shortly via WhatsApp.`);
-            alert("Booking request sent successfully to APJ Cabs team!\n\nThank you for choosing us.");
+            addBotMessage("✅ Your booking request has been submitted successfully!<br>Our team will confirm the details shortly.");
+            alert("Booking request sent to APJ Cabs team.\n\nThank you for choosing us!");
         }
-
-        // Initialize Bot
-        window.onload = function() {
-            addBotMessage("Welcome to APJ Cabs 🙏<br>Premium chauffeur-driven cars across India.<br>How can we help you today?");
-            renderStep(0);
-        };
     </script>
 </body>
 </html>
